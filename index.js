@@ -6,7 +6,7 @@ const app = express();
 
 //a route handler
 app.get('/', (req, res) => {
-	res.send({hi: 'there'});
+	res.send({bye: 'dude'});
 });
 
 //Dynamic port binding.
