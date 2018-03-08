@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engines": {// tell heroku the specific versions of nodes.
+  "engines": {
     "node": "9.7.1",
     "npm": "5.6.0"
   },
   "scripts": {
-    "start": "node index.js"// tell heroku the command to run to start the server
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
