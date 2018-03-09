@@ -3,16 +3,27 @@ const express = require('express');
 // like import, but it's in ES 2015, not in node yet.
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const keys = require('./config/keys');
 
 // app listens and handles requests
 const app = express();
 
-// client iD 214020500968-15h6qb5sb6725s8kdqsf3eqcbal8mpt5.apps.googleusercontent.com
-// client secret ZmUUn2QjEiLIYEdR7xhCQEda
-passport.use(new GoogleStrategy());
+passport.use(new GoogleStrategy({
+		clientID: keys.googleClientID,
+		clientSecret: keys.googleClientSecret,
+		callbackURL: '/auth/google/callback'
+	}, (accessToken) => {
+		console.log(accessToken);
+	})
+);
 
-//a route handler
-
+// route handler for auth process
+// the string 'google' is an internal identifier in GoogleStrategy
+app.get('/auth/google', passport.authenticate('google', {
+		scope: ['profile', 'email']
+		// the scope of info we're accessing from the user.
+	})
+);
 
 //passport part
 
