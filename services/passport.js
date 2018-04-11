@@ -19,27 +19,24 @@ passport.deserializeUser((id, done) => {
 });
 
 // Let passport use google strategy, and provide credentials, callback url, and token proccessing.
-passport.use(new GoogleStrategy({
-		clientID: keys.googleClientID,
-		clientSecret: keys.googleClientSecret,
-		callbackURL: '/auth/google/callback',
-		proxy: true // otherwise the relative path above for redirect would be consider unsafe from google
-	}, (accessToken, refreshToken, profile, done) => {
-		// check if profile id already exists; yes ? skip : create a user.
-		// This a Asynchronous request when reach to mongo.
-		User.findOne({ googleID: profile.id })
-			.then((existingUser) => {
+passport.use(
+	new GoogleStrategy(
+		{
+			clientID: keys.googleClientID,
+			clientSecret: keys.googleClientSecret,
+			callbackURL: '/auth/google/callback',
+			proxy: true // otherwise the relative path above for redirect would be consider unsafe from google (return to http://... not https, so google says mismatch)
+		}, 
+		async (accessToken, refreshToken, profile, done) => {
+			// check if profile id already exists; yes ? skip : create a user.
+			// This a Asynchronous request when reach to mongo.
+			const existingUser = await User.findOne({ googleID: profile.id });
 				if(existingUser){
-					done(null, existingUser); // first param is the error object.
+					return done(null, existingUser); // first param is the error object.
 				}
-				else {
-					// create and save a user id.
-					new User({googleID: profile.id})
-						.save() // also asynchronous
-						.then((newUser) => {
-							done(null, newUser);
-						});
-				}
-		});
-	})
+				// no record, create and save a user id.
+				const newUser = await new User({googleID: profile.id}).save();
+				done(null, newUser);
+		}
+	)
 );
