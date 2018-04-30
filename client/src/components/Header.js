@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import StripeComponent from './StripeComponent';
 
 class Header extends Component {
 	renderContent() {
@@ -13,7 +13,11 @@ class Header extends Component {
 					<li><a href="/auth/google">Login with Google</a></li>
 				);
 			default:
-				return <li><a href="/api/logout">Log out</a></li>
+				return [	
+					<li key="stripe-component"><StripeComponent /></li>,
+					<li key="credits" style={{margin: '0 10px'}}> Credits: { this.props.auth.credits } </li>,
+					<li key="login"><a href="/api/logout">Log out</a></li>
+				]
 		}
 	}
 

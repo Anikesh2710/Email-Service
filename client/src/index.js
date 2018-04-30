@@ -16,3 +16,6 @@ ReactDOM.render(
 	<Provider store={store}><App /></Provider>, //a provider reads update in the store and update all the children components.
 	document.querySelector('#root')
 );
+
+console.log('STRIPE_KEY is: ', process.env.REACT_APP_STRIPE_KEY);
+console.log('ENVIRONMENT is: ', process.env.NODE_ENV);

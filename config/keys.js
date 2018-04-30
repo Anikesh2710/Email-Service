@@ -1,5 +1,5 @@
 //keys.js - figure out what set of credentials to return
-// use enviroment variable from heroku
+// use enviroment variable (process.env..) from heroku
 
 if(process.env.NODE_ENV === 'production'){
 	// in production env - return the prod set of keys

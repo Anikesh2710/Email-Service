@@ -2,16 +2,26 @@ const express = require('express');  // common js module, requiring or sharing l
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session'); // express doesn't know about cookie.
 const passport = require('passport'); // tell passport about cookie session.
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 require('./models/User');
 require('./services/passport'); // passport with google strategy, credentials, and callbacks.
 const authRoutes = require('./routes/authRoutes')
+const billingRoutes = require('./routes/billingRoutes');
 
-mongoose.connect(keys.mongoURI); // connect mongoose to my remote mongoDB database.
+// connect mongoose to my remote mongoDB database.
+mongoose.connect(keys.mongoURI); 
 
-const app = express(); // express instance app listens and handles requests.
+// An express instance, app, listens and handles requests.
+const app = express(); 
 
-app.use( // let express instance know about cookiesession.
+// app.use weirs up middleware.
+
+// Parse any request with a body, and put the body inside req.body
+app.use(bodyParser.json()); 
+
+// let express instance know about cookiesession.
+app.use( 
 	cookieSession({
 		maxAge: 30 * 24 * 60 * 60 * 1000,
 		keys: [keys.cookieKey]
@@ -23,7 +33,11 @@ app.use( // let express instance know about cookiesession.
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+// these are routes handlers.
+// they take an express instance (app) and register different routes and methods
 authRoutes(app);
+billingRoutes(app);
 
 
 //Dynamic port binding.
