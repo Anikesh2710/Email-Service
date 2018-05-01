@@ -39,6 +39,18 @@ app.use(passport.session());
 authRoutes(app);
 billingRoutes(app);
 
+// these lines run in prod mode
+if(process.env.NODE_ENV === 'production') {
+	// Express will serve production assets
+	app.use(express.static('client/build'));
+	// if not found in 'client/build' then 
+	// Express will serve index.html file if the path is not defined in Express
+	const path = require('path');
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
+}
+
 
 //Dynamic port binding.
 //Look in the underlying environment and find the port to listen to.
